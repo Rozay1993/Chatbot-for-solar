@@ -20,6 +20,7 @@ openai.api_key=openai_api_key
 
 file_exists = exists('processed/embeddings.csv')
 df=pd.DataFrame()
+print(file_exists)
 if(file_exists ==True):
     df=pd.read_csv('processed/embeddings.csv', index_col=0)
     print('end read')

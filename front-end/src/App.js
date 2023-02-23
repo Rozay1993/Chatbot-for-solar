@@ -8,10 +8,8 @@ import './App.css';
 function SendMessage(data) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			const response = await Axios.post(
-				'https://45ce-2a00-23c7-ca06-7901-9950-842e-cf-444c.eu.ngrok.io/api/chat',
-				data
-			);
+			const API_URL = process.env.REACT_APP_API_URL;
+			const response = await Axios.post(API_URL, data);
 			resolve(response.answer);
 		} catch (error) {
 			reject(error);
@@ -20,7 +18,7 @@ function SendMessage(data) {
 }
 
 function App() {
-	const [chatting_data, set_chatting_data] = useState([]);
+	const [chatting_data, set_chatting_data] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState([]);
 
@@ -38,6 +36,8 @@ function App() {
 					humanChat: true,
 				},
 			]);
+
+			set_chatting_data('');
 
 			SendMessage({ question: chatting_data })
 				.then((res) => {
