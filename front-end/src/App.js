@@ -10,7 +10,7 @@ function SendMessage(data) {
 		try {
 			const API_URL = process.env.REACT_APP_API_URL;
 			const response = await Axios.post(API_URL, data);
-			resolve(response.answer);
+			resolve(response.data.answer);
 		} catch (error) {
 			reject(error);
 		}
@@ -28,20 +28,29 @@ function App() {
 
 	const onMessageKeyUp = (e) => {
 		if (e.which === 13) {
+			e.preventDefault();
+
 			setLoading(true);
-			setMessages([
+
+			const messageHistory = [
 				...messages,
 				{
 					chatContent: chatting_data,
 					humanChat: true,
 				},
-			]);
-
-			set_chatting_data('');
+			];
+			setMessages(messageHistory);
 
 			SendMessage({ question: chatting_data })
 				.then((res) => {
-					receiveMessage(res);
+					// receiveMessage(res);
+					setMessages([
+						...messageHistory,
+						{
+							chatContent: res,
+							humanChat: false,
+						},
+					]);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -49,22 +58,27 @@ function App() {
 				.finally(() => {
 					setLoading(false);
 				});
+
+			set_chatting_data('');
 		}
 	};
 
-	const messageData = messages.map((message, index) => {
+	let messageData = messages.map((message, index) => {
 		return <ChatComponent {...message} key={index} />;
 	});
 
-	const receiveMessage = (botMessage) => {
-		setMessages([
-			...messages,
-			{
-				chatContent: botMessage,
-				humanChat: true,
-			},
-		]);
-	};
+	// const receiveMessage = (botMessage) => {
+	// 	const messageHistory = [
+	// 		...messages,
+	// 		{
+	// 			chatContent: botMessage,
+	// 			humanChat: false,
+	// 		},
+	// 	];
+	// 	console.log('messages', messages);
+	// 	console.log('messageHistory', messageHistory);
+	// 	setMessages(messageHistory);
+	// };
 
 	return (
 		<div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
