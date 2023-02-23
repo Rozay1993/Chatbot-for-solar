@@ -1,0 +1,34 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body
+		class="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10"
+	>
+		<!-- Component Start -->
+		<div
+			class="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden"
+		>
+			<div
+				class="flex flex-col flex-grow h-0 p-4 overflow-auto"
+				id="chatbox"
+			></div>
+
+			<div class="bg-gray-300 p-4">
+				<input
+					class="flex items-center h-10 w-full rounded px-3 text-sm"
+					type="text"
+					placeholder="Type your message…"
+					id="chat_input_box"
+				/>
+			</div>
+		</div>
+		<!-- Component End  -->
+	</body>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script src="./chatGPT.js"></script>
+</html>
