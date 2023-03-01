@@ -94,9 +94,9 @@ function App() {
 						humanChat={false}
 						chatContent={
 							<>
-								<div>
+								{/* <div>
 									<img src={HelloEmoticon} alt="hello"></img>
-								</div>
+								</div> */}
 								<span className="text-sm leading-none">
 									How are you? What can help you? Please ask me.
 								</span>
