@@ -90,27 +90,25 @@ function App() {
 					<img className="w-[30%]" src={LogoIcon} alt="logo"></img>
 				</div>
 				<div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-					<div className="flex w-full mt-2 space-x-3 max-w-xs">
-						<div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-							<img src={BotIcon} alt="person"></img>
-						</div>
-						<div>
-							<div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-								<p className="text-sm">
-									<div>
-										<img src={HelloEmoticon} alt="hello"></img>
-									</div>
-									<span className="text-sm leading-none">
-										How are you? What can help you? Please ask me.
-									</span>
-								</p>
-							</div>
-						</div>
-					</div>
+					<ChatComponent
+						humanChat={false}
+						chatContent={
+							<>
+								<div>
+									<img src={HelloEmoticon} alt="hello"></img>
+								</div>
+								<span className="text-sm leading-none">
+									How are you? What can help you? Please ask me.
+								</span>
+							</>
+						}
+					/>
 					{messageData}
 					{loading ? (
 						<div className="flex w-full mt-2 space-x-3 max-w-xs">
-							<div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+							<div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+								<img src={BotIcon} alt="bot"></img>
+							</div>
 							<div>
 								<span className="text-sm text-gray-500 leading-none">
 									typing...
