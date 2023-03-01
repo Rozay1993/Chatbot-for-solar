@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Axios from 'axios';
 
 import ChatComponent from './components/chat';
-import HelloEmoticon from '../src/assets/image/hello.png';
 import BotIcon from './assets/image/bot.png';
 import LogoIcon from './assets/image/logo.png';
 
@@ -44,7 +43,10 @@ function App() {
 			];
 			setMessages(messageHistory);
 
-			SendMessage({ question: chatting_data })
+			SendMessage({
+				chathistory:
+					messageHistory.length < 5 ? messageHistory : messageHistory.slice(-5),
+			})
 				.then((res) => {
 					// receiveMessage(res);
 					setMessages([

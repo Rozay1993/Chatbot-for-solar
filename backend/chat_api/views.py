@@ -36,9 +36,8 @@ class Chatbot(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        question =  request.data.get('question'), 
-        print(question)
-        answer = answer_question(question=question, debug=False)
+        chathistory =  request.data.get('chathistory'), 
+        answer = answer_question(chatHistory=chathistory, debug=False)
         send_data= {}
         send_data["answer"] = answer
         return Response(send_data, status=status.HTTP_201_CREATED)
@@ -64,26 +63,40 @@ def create_context(question):
 
 def answer_question(
     model="text-davinci-003",
-    question="Am I allowed to publish model outputs to Twitter, without a human review?",
+    chatHistory=[
+        {
+            "humanChat": False,
+            "chatContent": "Am I allowed to publish model outputs to Twitter, without a human review?"
+        }
+    ],
     debug=False,
     max_tokens=1000,
     stop_sequence=None
 ):
-    """
-    Answer a question based on the most similar context from the dataframe texts
-    """
-    context = create_context(
-        question,
-    )
-    # If debug, print the raw model response
-    if debug:
-        print("Context:\n" + context)
-        print("\n\n")
 
     try:
+        """
+        Answer a question based on the most similar context from the dataframe texts
+        """
+        history = ""
+        for chat in chatHistory[0]:
+            print(chat)
+            if(chat['humanChat']):
+                history+=f"\nQueston: {chat['chatContent']}"
+            else:
+                history+=f"\nAnswer: {chat['chatContent']}"
+        print(history)
+        
+        context = create_context(
+            history,
+        )
+        # If debug, print the raw model response
+        if debug:
+            print("Context:\n" + context)
+            print("\n\n")
         # Create a completions using the questin and context
         response = openai.Completion.create(
-            prompt=f"Answer the question based on the context below.\"\n\nContext: {context}\n\n---\n\nQuestion: {question}\nAnswer:",
+            prompt=f"Answer the question based on the context below.\"\n{context}\n\n---\n\n{history}\nAnswer:",
             temperature=0,
             max_tokens=max_tokens,
             top_p=1,
@@ -95,4 +108,4 @@ def answer_question(
         return response["choices"][0]["text"].strip()
     except Exception as e:
         print(e)
-        return ""
+        return "Excuse me, one problem happens to me."
