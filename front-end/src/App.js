@@ -4,6 +4,7 @@ import Axios from 'axios';
 import ChatComponent from './components/chat';
 import HelloEmoticon from '../src/assets/image/hello.png';
 import BotIcon from './assets/image/bot.png';
+import LogoIcon from './assets/image/logo.png';
 
 import './App.css';
 
@@ -85,6 +86,9 @@ function App() {
 	return (
 		<div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
 			<div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+				<div className="flex justify-center border-b-2 py-2">
+					<img className="w-[30%]" src={LogoIcon} alt="logo"></img>
+				</div>
 				<div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
 					<div className="flex w-full mt-2 space-x-3 max-w-xs">
 						<div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
