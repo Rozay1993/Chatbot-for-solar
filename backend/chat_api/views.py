@@ -81,12 +81,21 @@ def answer_question(
         history = ""
         for chat in chatHistory[0]:
             if(chat['humanChat']):
-                history+=f"\nQueston: {chat['chatContent']}"
+                history+=f"\nHuman Queston: {chat['chatContent']}"
             else:
-                history+=f"\nAnswer: {chat['chatContent']}"
+                history+=f"\nBot Answer: {chat['chatContent']}"
 
+        question = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=f"Check out the chat transcript below and rewrite final question as one question to include the customer's name and main details.\n---\nChatting History:\n{history}\n\n---\nNew Question: ",
+            temperature=0.7,
+            max_tokens=256,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )["choices"][0]["text"].strip()
         context = create_context(
-            history,
+            question,
         )
         # If debug, print the raw model response
         if debug:

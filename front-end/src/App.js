@@ -100,7 +100,7 @@ function App() {
 									<img src={HelloEmoticon} alt="hello"></img>
 								</div> */}
 								<span className="text-sm leading-none">
-									How are you? What can help you? Please ask me.
+									How are you? What can I help you? Please ask me.
 								</span>
 							</>
 						}
