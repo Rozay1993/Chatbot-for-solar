@@ -80,13 +80,11 @@ def answer_question(
         """
         history = ""
         for chat in chatHistory[0]:
-            print(chat)
             if(chat['humanChat']):
                 history+=f"\nQueston: {chat['chatContent']}"
             else:
                 history+=f"\nAnswer: {chat['chatContent']}"
-        print(history)
-        
+
         context = create_context(
             history,
         )
