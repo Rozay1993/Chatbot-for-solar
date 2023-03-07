@@ -56,12 +56,15 @@ class PodioHook(APIView):
     def post(self, request, *args, **kwargs):
         request = request.data
         print(request)
+        return all_path(request)
     def put(self, request, *args, **kwargs):
         request = request.data
         print(request)
+        return all_path(request)
     def delete(self, request, *args, **kwargs):
         request = request.data
         print(request)
+        return all_path(request)
 
 def create_context(question):
     """
@@ -137,3 +140,91 @@ def answer_question(
     except Exception as e:
         print(e)
         return "Excuse me, one problem happens to me."
+
+def verify_hook(podio, hook_id, code):
+    verify_response=podio.Hook.validate(hook_id, code)
+    return Response(verify_response,status=status.HTTP_201_CREATED)
+
+def all_path(request):
+    try:
+        match (request['type']):
+            case 'hook.verify':
+                return verify_hook(podio, hook_id=request['hook_id'], code=request['code'])
+            case 'item.create':
+                id=str(request['item_id'])
+                item = podio.Item.find(item_id=int(id))
+                new_value=all_values(item['fields'])
+                set_item_to_pinecone(id, new_value)
+                return Response(status=status.HTTP_201_CREATED)
+            
+            case 'item.update':
+                id=str(request['item_id'])
+                item = podio.Item.find(item_id=int(id))
+                new_value=all_values(item['fields'])
+                # old_value=get_item_from_pinecone(id)
+                set_item_to_pinecone(id, new_value)
+                # if(old_value==False):
+                #     set_item_to_pinecone(id, new_value)
+                # elif(new_value['Stage'] != old_value['Stage']):
+                #     print('update!')
+                return Response(status=status.HTTP_201_CREATED)
+            
+            case 'item.delete':
+                id=str(request['item_id'])
+                delete_item_pinecone(id)
+                return Response(status=status.HTTP_201_CREATED)
+    except KeyError:
+        print(KeyError)
+        return Response(KeyError,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+def all_values(fields):
+    values={}
+    for field in fields:
+        match(field['type']):
+            case 'app':
+                values[field['label']]=''
+            case 'category':
+                values[field['label']]=field['values'][0]['value']['text']
+            case 'date':
+                values[field['label']]=field['values'][0]['start']
+            case 'embed':
+                values[field['label']]=field['values'][0]['embed']['url']
+            case default:
+                values[field['label']]=retrun_values(field)
+    # print(values)
+    return values
+
+def retrun_values(field):
+    print(field['label'],field['type'], ' :',field['values'][0])
+    match(field['label']):
+        case "Date Created" | "? Install Complete Date" | "MTRX NTP Approved Date":
+            return field['values'][0]['start']
+        # case "Stage" | "Warehouse territory" | "Status" | "? MTRX Install Status" | "Finance Type" | "Deal Status (Sales)" | "Welcome Call Checklist" | "HOA Approval Required?":
+        #     return field['values'][0]['value']['text']
+        case "Project Manager":
+            return field['values'][0]['value']['name']
+        case "Metrics" | "Sales Item":
+            return ''
+        case default:
+            return field['values'][0]['value']
+        
+def get_item_from_pinecone(id):
+    item = pine_index.fetch([id])
+    print(item)
+    if item is not None:
+        return item[id]['metadata']
+    else:
+        return False
+
+def set_item_to_pinecone(id, new_value):
+    text= f"Now the stage for {new_value['Customer Full Name']} is {new_value['Stage']}"
+    embedding = openai.Embedding.create(input=text, engine=MODEL)['data'][0]['embedding']
+    pine_index.upsert(vectors=[{
+        "id": id,
+        'values': embedding,
+        'metadata': new_value
+    }])
+    print('updated')
+
+def delete_item_pinecone(id):
+    pine_index.delete([id], delete_all=True)
