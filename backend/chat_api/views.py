@@ -229,7 +229,7 @@ def set_item_to_pinecone(id, new_value):
         "id": id,
         'values': embedding,
         'metadata': new_value
-    }])
+    }],async_req=True)
     print('updated')
 
 def delete_item_pinecone(id):
