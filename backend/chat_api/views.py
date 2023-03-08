@@ -225,6 +225,7 @@ def get_item_from_pinecone(id):
 def set_item_to_pinecone(id, new_value):
     text= f"Now the stage for {new_value['Customer Full Name']} is {new_value['Stage']}"
     embedding = openai.Embedding.create(input=text, engine=MODEL)['data'][0]['embedding']
+    new_value['text']=text
     pine_index.upsert(vectors=[{
         "id": id,
         'values': embedding,
