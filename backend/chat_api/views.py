@@ -152,14 +152,14 @@ def all_path(request):
                 return verify_hook(podio, hook_id=request['hook_id'], code=request['code'])
             case 'item.create':
                 id="id-"+str(request['item_id'])
-                item = podio.Item.find(item_id=int(id))
+                item = podio.Item.find(item_id=int(request['item_id']))
                 new_value=all_values(item['fields'])
                 set_item_to_pinecone(id, new_value)
                 return Response(status=status.HTTP_201_CREATED)
             
             case 'item.update':
                 id="id-"+str(request['item_id'])
-                item = podio.Item.find(item_id=int(id))
+                item = podio.Item.find(item_id=int(request['item_id']))
                 new_value=all_values(item['fields'])
                 # old_id=str(new_value['PROJECT ID'])
                 # old_value=get_item_from_pinecone(old_id)
