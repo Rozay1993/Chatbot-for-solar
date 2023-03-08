@@ -133,9 +133,9 @@ function App() {
 			<div className="relative md:absolute text-center font-bold md:text-xl text-base md:top-[0px] md:right-[0px] md:w-[30vw] md:p-10 pb-10 order-1 items-center md:h-screen flex">
 				<div className="w-full">
 					<p>This is a Beta product Powered by AI. </p>
-					<p>As of right now it will only give the "Stage" of the Porject </p>
+					<p>As of right now it will only give the "Stage" of the Project </p>
 					<p className="w-[80%] mx-auto md:mt-20 mt-5">
-						Questions must be frased as the following- "What is teh stage of for
+						Questions must be frased as the following- "What is the stage of for
 						customer X?"
 					</p>
 				</div>
