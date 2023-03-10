@@ -127,7 +127,7 @@ def answer_question(
             print("\n\n")
         # Create a completions using the questin and context
         response = openai.Completion.create(
-            prompt=f"Answer the question based on the context below.\"\n{context}\n\n---\n\n{history}\nAnswer:",
+            prompt=f"Please kindly answer the question including customer's name according to the situation below.\"\n{context}\n\n---\n\n{history}\nAnswer:",
             temperature=0,
             max_tokens=max_tokens,
             top_p=1,
