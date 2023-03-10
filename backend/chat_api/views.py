@@ -223,9 +223,34 @@ def get_item_from_pinecone(id):
         return False
     
 def set_item_to_pinecone(id, new_value):
-    text= f"Now the stage for {new_value['Customer Full Name']} is {new_value['Stage']}"
-    embedding = openai.Embedding.create(input=text, engine=MODEL)['data'][0]['embedding']
+    text=''
+    if ('Customer Full Name' in new_value)==False:
+        return False
+    
+    text += f"Now the stage for {new_value['Customer Full Name']} is "
+    if ('Stage' in new_value):
+        text += new_value['Stage']
+    else:
+        text += "none"
+
+    text += f"And the address of Customer is "
+    if('Property Address' in new_value):
+        text += new_value["Property Address"]
+    else:
+        text += "none"
+    text += f"The email of Customer is "
+
+    if('Customer Email' in new_value):
+        text += new_value['Customer Email']
+    else:
+        text += "none"
+    embedding=[]
+    try:
+        embedding = openai.Embedding.create(input=text, engine=MODEL)['data'][0]['embedding']
+    except :
+        embedding = openai.Embedding.create(input=text, engine=MODEL)['data'][0]['embedding']
     new_value['text']=text
+    
     pine_index.upsert(vectors=[{
         "id": id,
         'values': embedding,
